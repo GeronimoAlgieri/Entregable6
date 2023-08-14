@@ -1,78 +1,69 @@
 const socket = io();
 
-socket.emit("connection", "nuevo cliente conectado");
+let chatBox = document.getElementById("chatBox");
 
-socket.on("update-products", (data) => {
-  console.log(data);
-  let container = document.getElementById("contenedor");
-  container.innerHTML = "";
-  data.forEach((producto) => {
-    let newDiv = document.createElement("div");
-    newDiv.innerHTML += `<div class="card" style="width: 18rem;">
-        <img src="${producto.thumbnail}" className="card-img-top" alt="${producto.title}">
-        <div class="card-body">
-          <h5 class="card-title">${producto.title}</h5>
-          <p class="card-text">${producto.description}</p>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">${producto.code}</li>
-          <li class="list-group-item">${producto.price}</li>
-          <li class="list-group-item">Stock: ${producto.stock}</li>
-        </ul>
-        <div class="card-body">
-          <a href="#" class="card-link">${producto.status}</a>
-          <a href="#" class="card-link">${producto.category}</a>
-          <button type="button" class="btn btn-danger" id='${producto._id}'>
-          Eliminar Producto
-          </button>
-        </div>
-      </div>`;
-    container.append(newDiv);
-    let botonEliminar = document.getElementById(`${producto._id}`);
-    botonEliminar.addEventListener("click", borrarProducto);
-  });
+let user;
+Swal.fire({
+  title: "Bienvenido al chat",
+  text: "Ingrese su email para comenzar a chatear",
+  input: "email",
+  confirmButtonText: "Aceptar",
+  allowOutsideClick: false,
+  inputValidator: (value) => {
+    if (!value) {
+      return "Debe ingresar un email valido";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+      return "Debe ingresar un email valido";
+    }
+  },
+}).then((result) => {
+  if (result.value) {
+    user = result.value;
+    socket.emit("new-user", { user: user, id: socket.id });
+  }
 });
 
-let formAgregar = document.getElementById("productForm");
-
-formAgregar.addEventListener("submit", (e) => {
-  e.preventDefault();
-  let title = document.getElementById("nombre").value;
-  let description = document.getElementById("descripcion").value;
-  let code = document.getElementById("codigo").value;
-  let price = document.getElementById("precio").value;
-  let stock = document.getElementById("stock").value;
-  let category = document.getElementById("categoria").value;
-  let thumbnail = document.getElementById("rutas").value;
-  fetch("agregarProducto", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      title,
-      description,
-      code,
-      price,
-      stock,
-      category,
-      thumbnail,
-    }),
-  });
-  socket.emit("new-product", {
-    title,
-    description,
-    code,
-    price,
-    stock,
-    category,
-    thumbnail,
-  });
-  location.reload();
+chatBox.addEventListener("keyup", (e) => {
+  if (e.key === "Enter") {
+    if (chatBox.value.trim().length > 0) {
+      socket.emit("message", {
+        user: user,
+        message: chatBox.value,
+      });
+      chatBox.value = "";
+    }
+  }
 });
 
-function borrarProducto(e) {
-  let id = e.target.id;
-  socket.emit("delete-product", id);
-  location.reload();
+socket.on("messageLogs", (data) => {
+  let log = document.getElementById("messageLogs");
+  let message = "";
+
+  data.forEach((elem) => {
+    message += `
+    <div class="chat-message">
+        <div class="message-bubble">
+          <p class="fw-bold mb-0">${elem.user}</p>
+          <hr />
+          <p class="message">${elem.message}</p>
+       </div>
+      </div>
+      `;
+  });
+  log.innerHTML = message;
+});
+
+socket.on("new-user-connected", (data) => {
+  if (data.id !== socket.id)
+    Swal.fire({
+      text: `${data.user} se ha conectado al chat`,
+      toast: true,
+      position: "top-end",
+    });
+});
+
+function addToCart(id) {
+  console.log(id);
 }

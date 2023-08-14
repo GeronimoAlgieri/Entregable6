@@ -1,9 +1,37 @@
-<header>
-  <h1>Chat</h1>
-</header>
 <div>
-  <input type="text" placeholder="Escriba su mensaje..." id="chatBox" />
+
+  <div class="chat-container">
+    <div class="chat-header">
+      <h2>Chat de la tienda</h2>
+    </div>
+
+    <div class="chat-window">
+      <div id="messageLogs">
+        {{#each data}}
+          <div class="chat-message">
+            <div class="message-bubble">
+              <div class="fw-bold mb-0">{{this.user}}</div>
+              <hr />
+              <p class="message">{{this.message}}</p>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+    <div class="chat-input-container">
+      <input
+        type="text"
+        placeholder="Escribe un mensaje..."
+        name="message"
+        id="chatBox"
+      />
+    </div>
+  </div>
 </div>
-<section id="contenedorMensajes">
-  {{! Se llena con js }}
-</section>
+
+<!-- SweetAlert2 -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Socket.io -->
+<script src="/socket.io/socket.io.js"></script>
+<!-- Custom scripts -->
+<script src="/js/index.js"></script>

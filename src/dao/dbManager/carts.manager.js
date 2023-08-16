@@ -1,4 +1,4 @@
-import CartsModel from "../models/cart.js";
+import CartsModel from "../models/carts.js";
 
 export default class Cart {
   getAll = async () => {
@@ -7,7 +7,12 @@ export default class Cart {
   };
 
   getOne = async (id) => {
-    let result = await CartsModel.findById(id).lean();
+    let result = await CartsModel.findOne({ _id: id }).lean();
+    return result;
+  };
+
+  createCart = async () => {
+    let result = await CartsModel.create({});
     return result;
   };
 

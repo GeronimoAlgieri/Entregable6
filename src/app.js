@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import { Server } from "socket.io";
 import * as dotenv from "dotenv";
 import productRouter from "./Routes/products.routers.js";
-import carritoRouter from "./Routes/cart.routers.js";
+import carritoRouter from "./Routes/carts.routers.js";
 import chatRouter from "./Routes/chat.routers.js";
 import cartProductRouter from "./Routes/cartsProducts.routers.js";
 import Message from "./dao/dbManager/messages.manager.js";
@@ -27,10 +27,10 @@ app.set("view engine", "handlebars");
 
 app.use(express.static("public"));
 
-app.use("/api/productos/", productRouter);
-app.use("/api/carrito/", carritoRouter);
-app.use("/api/chat/", chatRouter);
-app.use("/api/cart/", cartProductRouter);
+app.use("/products", productRouter);
+app.use("/carts", carritoRouter);
+app.use("/chat", chatRouter);
+app.use("/cart", cartProductRouter);
 
 const server = app.listen(PORT, () => {
   console.log("Escuchando desde el puerto " + PORT);

@@ -1,7 +1,7 @@
 import fs from "fs";
 import __dirname from "../../utils.js";
 
-const path = __dirname + "../../data/carrito.json";
+const path = __dirname + "../../data/carts.json";
 
 export default class Products {
   getAll = async () => {

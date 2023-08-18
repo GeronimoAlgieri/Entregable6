@@ -21,8 +21,41 @@ export default class Cart {
     return result;
   };
 
-  updateCart = async (id, cart) => {
-    let result = await CartsModel.updateOne({ _id: id }, cart);
+  deleteCart = async (id) => {
+    let result = await CartsModel.findByIdAndDelete(id);
     return result;
   };
+
+  async saveProductToCart(cart_id, prod_id) {
+    try {
+      const cart = await CartsModel.findOne({ _id: cart_id });
+      const existProduct = cart.products.find(
+        (elem) => elem.product.toString() === prod_id
+      );
+      if (existProduct) {
+        existProduct.quantity++;
+      } else {
+        console.log("el producto no existe");
+        cart.products.push({
+          product: prod_id,
+          quantity: 1,
+        });
+      }
+      await cart.save();
+      return cart;
+    } catch (err) {
+      console.log("Erro en addproduct", err);
+      return err;
+    }
+  }
+
+  async updateProductoInCart(cid, pid, newQuantity) {
+    const updatedCart = await CartsModel.findOneAndUpdate(
+      { _id: cid, "products._id": pid },
+      { $set: { "products.$.quantity": newQuantity } },
+      { new: true }
+    );
+
+    return updatedCart;
+  }
 }

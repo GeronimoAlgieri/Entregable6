@@ -5,48 +5,56 @@ const router = Router();
 const productManager = new Product();
 
 //Tomar productos
-router.get("/all", async (req, res) => {
-  const { limit = 10, page = 1, sort, query } = req.query;
-  const results = await ProductsModel.paginate(
-    query ? { category: query } : {},
-    { limit, page, lean: true, sort: sort ? { price: 1 } : { price: -1 } }
-  );
-  let prevLink = results.hasPrevPage
-    ? `http://localhost:8080/productos/?page=${
-        +page - 1
-      }&limit=${limit}&query=${query}&sort=${sort}`
-    : null;
-  let nextLink = results.hasNextPage
-    ? `http://localhost:8080/productos/?page=${
-        +page + 1
-      }&limit=${limit}&query=${query}&sort=${sort}`
-    : null;
-  results.prevLink = prevLink;
-  results.nextLink = nextLink;
-  res.send(results);
-  try {
-    const products = await productManager.getAll();
-    res.json({ message: "success", products: products });
-  } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Error al obtener los productos", data: err });
-  }
-});
-//Tomar producto por id
 router.get("/", async (req, res) => {
-  const { limit } = req.params;
+  const { limit, page, sort } = req.query;
+  const defaultLimit = 10;
+  const defaultPage = 1;
+
+  // Parsea el valor de la página a un número entero
+  const currentPage = parseInt(page, 10) || defaultPage;
+
   try {
-    let resp = await productManager.getAll();
-    console.log(resp);
-    if (limit) {
-      let tempArray = resp.slice(0, limit);
-      res.render("products", { products: tempArray });
-    } else {
-      res.render("products", { products: resp });
+    let response = await productManager.getAll();
+
+    // Resolución de la ordenación
+    if (sort === "asc" || sort === "desc") {
+      response.sort((a, b) => {
+        return sort === "asc" ? a.price - b.price : b.price - a.price;
+      });
     }
+
+    const startIndex = (currentPage - 1) * (limit ? +limit : defaultLimit);
+    const endIndex = startIndex + (limit ? +limit : defaultLimit);
+
+    const paginatedResponse = response.slice(startIndex, endIndex);
+
+    const totalPages = Math.ceil(
+      response.length / (limit ? +limit : defaultLimit)
+    );
+
+    res.render("products", {
+      products: paginatedResponse,
+      pagination: {
+        status: "success",
+        totalPages: totalPages,
+        prevPage: currentPage > 1 ? currentPage - 1 : null,
+        nextPage: endIndex < response.length ? currentPage + 1 : null,
+        page: currentPage,
+        hasPrevPage: currentPage > 1,
+        hasNextPage: endIndex < response.length,
+        prevLink:
+          currentPage > 1 ? `/api/products?page=${currentPage - 1}` : null,
+        nextLink:
+          endIndex < response.length
+            ? `/api/products?page=${currentPage + 1}`
+            : null,
+      },
+    });
   } catch (err) {
-    res.render({ message: "Error al obtener los productos", data: err });
+    res.status(500).json({
+      message: "Error al obtener los productos",
+      error: err,
+    });
   }
 });
 //Modificar un producto

@@ -27,7 +27,7 @@ app.set("view engine", "handlebars");
 
 app.use(express.static("public"));
 
-app.use("/products", productRouter);
+app.use("/api/products", productRouter);
 app.use("/carts", carritoRouter);
 app.use("/chat", chatRouter);
 app.use("/cart", cartProductRouter);
@@ -60,7 +60,7 @@ ioServer.on("connection", async (socket) => {
   socket.on("message", async (data) => {
     try {
       await messageManager.saveMessage(data);
-      let messages = await messagesManager.getAll();
+      let messages = await messageManager.getAll();
       ioServer.emit("messageLogs", messages);
     } catch (err) {
       console.log(err);

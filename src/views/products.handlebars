@@ -83,17 +83,16 @@
         <h1>{{message}}</h1>
         <h3>{{products}}</h3>
       {{/if}}
+    <div  class="justify-content-center" id="paginated">
+      <p>Page {{ pagination.currentPage }} of {{ pagination.totalPages }}</p>
+  
+      {{#if pagination.hasPrevPage}}
+        <a href="{{ pagination.prevLink }}">Anterior</a>
+      {{/if}}
+  
+      {{#if pagination.hasNextPage}}
+        <a href="{{ pagination.nextLink }}">Siguiente</a>
+      {{/if}}
     </div>
-    {{#if hasPrevPage}}
-      <a
-        href="/?limit={{limit}}&page={{prevPage}}&sort={{sort}}&query={{query}}"
-      ><button class="btn btn-danger">Anterior</button></a>
-    {{/if}}
-    {{#if hasNextPage}}
-      <a
-        href="/?limit={{limit}}&page={{nextPage}}&sort={{sort}}&query={{query}}"
-      ><button class="btn btn-danger">Siguiente</button></a>
-    {{/if}}
-  </div>
 </section>
 <script src="/js/products.js"></script>

@@ -49,7 +49,7 @@ app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
-app.use(express.static("public"));
+app.use(express.static("../public"));
 
 const environment = async () => {
   try {

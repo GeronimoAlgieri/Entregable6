@@ -67,7 +67,7 @@ app.use("/carts", carritoRouter);
 app.use("/chat", chatRouter);
 app.use("/", loginRouter);
 app.use("/signup", signupRouter);
-app.use("/api/sessions/", sessionRouter);
+app.use("/api/session/", sessionRouter);
 
 const server = app.listen(PORT, () => {
   console.log("Escuchando desde el puerto " + PORT);

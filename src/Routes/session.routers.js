@@ -54,4 +54,18 @@ router.get("/privado", auth, (req, res) => {
   res.render("topsecret", {});
 });
 
+router.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (!err) {
+      return res.json({
+        message: "Sesión cerrada",
+      });
+    } else {
+      return res.json({
+        message: "Error al cerrar sesión",
+      });
+    }
+  });
+});
+
 export default router;

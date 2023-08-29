@@ -55,17 +55,23 @@
                   />
                   <label for="password" class="form-label"></label>
                 </div>
+
+                <p class="small mb-5 pb-lg-2"><a
+                    class="text-white-50"
+                    href="http://localhost:8080/forgot"
+                  >Has olvidado tu contraseña?</a></p>
                 <button
                   id="login"
                   class="btn btn-outline-light btn-lg px-5"
                   type="submit"
                 >Iniciar Sesion</button>
-
               </form>
-              <p class="small mb-5 pb-lg-2"><a
-                  class="text-white-50"
-                  href="#!"
-                ></a></p>
+
+              <a href="/api/session/github"><button
+                  id="login"
+                  class="btn btn-outline-light btn-lg px-5"
+                  type="submit"
+                >Login con github</button></a>
 
               <div class="d-flex justify-content-center text-center mt-4 pt-1">
                 <a href="#!" class="text-white"><i

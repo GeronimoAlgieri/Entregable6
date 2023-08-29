@@ -13,7 +13,10 @@ import chatRouter from "./Routes/chat.routers.js";
 import Message from "./dao/dbManager/messages.manager.js";
 import sessionRouter from "./Routes/session.routers.js";
 import loginRouter from "./Routes/login.routers.js";
+import forgotRouter from "./Routes/forgot.routers.js";
 import signupRouter from "./Routes/signup.routes.js";
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 
 dotenv.config();
 
@@ -42,6 +45,10 @@ app.use(
   })
 );
 
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -67,6 +74,7 @@ app.use("/carts", carritoRouter);
 app.use("/chat", chatRouter);
 app.use("/", loginRouter);
 app.use("/signup", signupRouter);
+app.use("/forgot", forgotRouter);
 app.use("/api/session/", sessionRouter);
 
 const server = app.listen(PORT, () => {

@@ -1,6 +1,12 @@
 import { Router } from "express";
 import UserModel from "../dao/models/user.js";
-import { createHash } from "../utils.js";
+import {
+  createHash,
+  generateToken,
+  isValidPassword,
+  passportCall,
+  authorization,
+} from "../utils.js";
 import passport from "passport";
 
 const router = Router();
@@ -13,40 +19,37 @@ function auth(req, res, next) {
   return res.status(401).json("error de autenticacion");
 }
 
-// router.post("/login", async (req, res) => {
-//   console.log(req.body);
-//   const { username, password } = req.body;
-//   const result = await UserModel.find({
-//     email: username,
-//     password,
-//   });
-//   if (result.length === 0) return res.status(401).json({ respuesta: "error" });
-//   else {
-//     req.session.user = username;
-//     req.session.admin = true;
-//     res.status(200).json({ respuesta: "ok" });
-//   }
-// });
-
 router.post(
   "/login",
   passport.authenticate("login", {
     failureRedirect: "/api/session/failLogin",
   }),
   async (req, res) => {
-    console.log(req.user);
-    if (!req.user) {
-      return res.status(401).json("error de autenticacion");
+    const { email, password } = req.body;
+    const user = await UserModel.findOne({ email, password });
+    if (!user) {
+      return res.status(401).json("Usuario no encontrado");
+    } else {
+      if (!isValidPassword(email, user.password)) {
+        return res.status(401).json({ mesage: "contraseña invalida" });
+      } else {
+        const myToken = generateToken(user);
+        res.cookie("C0d3rS3cr3t", myToken, {
+          maxAge: 60 * 60 * 1000,
+          httpOnly: true,
+        });
+        return res.status(200).json({ message: "success" });
+      }
     }
-    req.session.user = {
-      first_name: req.user.first_name,
-      last_name: req.user.last_name,
-      email: req.user.email,
-      age: req.user.age,
-    };
-    req.session.admin = true;
+  }
+);
 
-    res.send({ status: "success", mesage: "user logged", user: req.user });
+router.get(
+  "/current",
+  passportCall("jwt"),
+  authorization("user"),
+  (req, res) => {
+    res.send(req.user);
   }
 );
 
@@ -88,16 +91,10 @@ router.post(
     res.send({ status: "success", message: "user register" });
   }
 );
+
 router.get("/failRegister", async (req, res) => {
   console.log("failed strategy");
   res.send({ error: "failed" });
-});
-
-router.get("/privado", auth, (req, res) => {
-  res.render("topsecret", {
-    nombre: req.session.user.first_name,
-    apellido: req.session.user.last_name,
-  });
 });
 
 router.post("/forgot", async (req, res) => {
@@ -124,16 +121,23 @@ router.post("/forgot", async (req, res) => {
 
 router.get(
   "/github",
-  passport.authenticate("github", { scope: ["user:email"] })
-),
-  async (req, res) => {};
+  passport.authenticate("github", { scope: ["user:email"] }),
+  async (req, res) => {}
+);
 
+// router.get(
+//   "/githubcallback",
+//   passport.authenticate("github", { failureRedirect: "/login" }),
+//   async (req, res) => {
+//     req.session.user = req.user;
+//     req.session.admin = true;
+//     res.redirect("/");
+//   }
+// );
 router.get(
   "/githubcallback",
   passport.authenticate("github", { failureRedirect: "/login" }),
   async (req, res) => {
-    req.session.user = req.user;
-    req.session.admin = true;
     res.redirect("/");
   }
 );

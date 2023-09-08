@@ -19,30 +19,49 @@ function auth(req, res, next) {
   return res.status(401).json("error de autenticacion");
 }
 
-router.post(
-  "/login",
-  passport.authenticate("login", {
-    failureRedirect: "/api/session/failLogin",
-  }),
-  async (req, res) => {
-    const { email, password } = req.body;
-    const user = await UserModel.findOne({ email, password });
-    if (!user) {
-      return res.status(401).json("Usuario no encontrado");
+// router.post(
+//   "/login",
+//   passport.authenticate("login", {
+//     failureRedirect: "/api/session/failLogin",
+//   }),
+//   async (req, res) => {
+//     const { email, password } = req.body;
+//     const user = await UserModel.findOne({ email, password });
+//     if (!user) {
+//       return res.status(401).json("Usuario no encontrado");
+//     } else {
+//       if (!isValidPassword(email, user.password)) {
+//         return res.status(401).json({ mesage: "contraseña invalida" });
+//       } else {
+//         const myToken = generateToken(user);
+//         res.cookie("C0d3rS3cr3t", myToken, {
+//           maxAge: 60 * 60 * 1000,
+//           httpOnly: true,
+//         });
+//         return res.status(200).json({ message: "success" });
+//       }
+//     }
+//   }
+// );
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  const user = await UserModel.findOne({ email: email });
+  if (!user) {
+    return res.json({ status: "error", message: "User not found" });
+  } else {
+    if (!isValidPassword(password, user.password)) {
+      return res.json({ status: "error", message: "Invalid password" });
     } else {
-      if (!isValidPassword(email, user.password)) {
-        return res.status(401).json({ mesage: "contraseña invalida" });
-      } else {
-        const myToken = generateToken(user);
-        res.cookie("C0d3rS3cr3t", myToken, {
-          maxAge: 60 * 60 * 1000,
-          httpOnly: true,
-        });
-        return res.status(200).json({ message: "success" });
-      }
+      const myToken = generateToken(user);
+      res.cookie("coderCookieToken", myToken, {
+        maxAge: 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      return res.json({ status: "success" });
     }
   }
-);
+});
 
 router.get(
   "/current",

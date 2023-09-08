@@ -65,7 +65,22 @@ const initializePassport = () => {
         usernameField: "email",
         passwordField: "password",
       },
-      async (req, username, password, done) => {}
+      async (req, username, password, done) => {
+        try {
+          const user = await UserModel.findOne({ email: username });
+          if (!user) {
+            return done(null, false, { message: "Usuario no encontrado" });
+          }
+          console.log("user", user);
+          if (!isValidPassword(user.password, password)) {
+            return done(null, false, { message: "Contraseña incorrecta" });
+          } else {
+            return done(null, user);
+          }
+        } catch (err) {
+          return done("Error", err);
+        }
+      }
     )
   );
 
@@ -88,7 +103,7 @@ const initializePassport = () => {
               last_name: profile.displayName.split(" ")[1],
               email: profile?.emails[0]?.value,
               age: 19,
-              password: "",
+              password: crypto.randomBytes(20).toString("hex"),
             };
             let result = await UserModel.create(newUser);
             done(null, result);
@@ -111,6 +126,7 @@ const initializePassport = () => {
       },
       async (jwt_payload, done) => {
         try {
+          console.log("jwt", jwt_payload);
           let resp = await UserModel.findOne({
             email: jwt_payload.user.username,
           });

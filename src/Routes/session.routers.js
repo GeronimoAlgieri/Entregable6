@@ -144,19 +144,12 @@ router.get(
   async (req, res) => {}
 );
 
-// router.get(
-//   "/githubcallback",
-//   passport.authenticate("github", { failureRedirect: "/login" }),
-//   async (req, res) => {
-//     req.session.user = req.user;
-//     req.session.admin = true;
-//     res.redirect("/");
-//   }
-// );
 router.get(
   "/githubcallback",
   passport.authenticate("github", { failureRedirect: "/login" }),
   async (req, res) => {
+    req.session.user = req.user;
+    req.session.admin = true;
     res.redirect("/");
   }
 );

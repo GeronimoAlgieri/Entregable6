@@ -9,9 +9,16 @@ async function postLogin(email, password) {
   });
   const data = await response.json();
   console.log(data);
-  setTimeout(() => {
-    window.location.href = "http://localhost:8080/api/products";
-  }, 2000);
+  // setTimeout(() => {
+  //   window.location.href = "http://localhost:8080/api/products";
+  // }, 2000);
+  if (data.status === "success") {
+    setTimeout(() => {
+      window.location.href = "http://localhost:8080/api/products";
+    }, 2000);
+  } else {
+    console.log("error");
+  }
 }
 
 const loginForm = document.getElementById("login-form");

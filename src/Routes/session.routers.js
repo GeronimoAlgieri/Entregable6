@@ -25,12 +25,12 @@ function auth(req, res, next) {
 //     failureRedirect: "/api/session/failLogin",
 //   }),
 //   async (req, res) => {
-//     const { email, password } = req.body;
-//     const user = await UserModel.findOne({ email, password });
+//     const { username, password } = req.body;
+//     const user = await UserModel.findOne({ username, password });
 //     if (!user) {
 //       return res.status(401).json("Usuario no encontrado");
 //     } else {
-//       if (!isValidPassword(email, user.password)) {
+//       if (!isValidPassword(username, username.password)) {
 //         return res.status(401).json({ mesage: "contraseña invalida" });
 //       } else {
 //         const myToken = generateToken(user);
@@ -54,7 +54,7 @@ router.post("/login", async (req, res) => {
       return res.json({ status: "error", message: "Invalid password" });
     } else {
       const myToken = generateToken(user);
-      res.cookie("coderCookieToken", myToken, {
+      res.cookie("C0d3rS3cr3t", myToken, {
         maxAge: 60 * 60 * 1000,
         httpOnly: true,
       });
@@ -63,14 +63,14 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get(
-  "/current",
-  passportCall("jwt"),
-  authorization("user"),
-  (req, res) => {
-    res.send(req.user);
-  }
-);
+// router.get(
+//   "/current",
+//   passportCall("jwt"),
+//   authorization("user"),
+//   (req, res) => {
+//     res.send(req.user);
+//   }
+// );
 
 router.get("/failLogin", async (req, res) => {
   console.log("failed strategy");

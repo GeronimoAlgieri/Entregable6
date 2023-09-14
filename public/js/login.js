@@ -17,7 +17,7 @@ async function postLogin(email, password) {
       window.location.href = "http://localhost:8080/api/products";
     }, 2000);
   } else {
-    console.log("error");
+    console.log("Email o contraseña incorrecta");
   }
 }
 

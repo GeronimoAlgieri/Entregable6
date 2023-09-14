@@ -146,13 +146,20 @@ router.get(
 
 router.get(
   "/githubcallback",
-  passport.authenticate("github", { failureRedirect: "/login" }),
+  passport.authenticate("github", { failureRedirect: "/" }),
   async (req, res) => {
     req.session.user = req.user;
     req.session.admin = true;
     res.redirect("/");
   }
 );
+
+router.get("/privado", auth, (req, res) => {
+  res.render("topsecret", {
+    nombre: req.session.user.first_name,
+    apellido: req.session.user.last_name,
+  });
+});
 
 // router.get("/logout", (req, res) => {
 //   req.session.destroy((err) => {

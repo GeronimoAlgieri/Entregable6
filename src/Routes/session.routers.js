@@ -1,5 +1,5 @@
 import { Router } from "express";
-import UserModel from "../dao/models/user.js";
+import UserModel from "../dao/mongo/models/user.js";
 import {
   createHash,
   generateToken,
@@ -150,7 +150,7 @@ router.get(
   async (req, res) => {
     req.session.user = req.user;
     req.session.admin = true;
-    res.redirect("/");
+    res.redirect("/api/products");
   }
 );
 

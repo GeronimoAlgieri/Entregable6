@@ -10,7 +10,6 @@ import MongoStore from "connect-mongo";
 import productRouter from "./Routes/products.routers.js";
 import carritoRouter from "./Routes/carts.routers.js";
 import chatRouter from "./Routes/chat.routers.js";
-import Message from "./dao/dbManager/messages.manager.js";
 import sessionRouter from "./Routes/session.routers.js";
 import loginRouter from "./Routes/login.routers.js";
 import forgotRouter from "./Routes/forgot.routers.js";
@@ -20,7 +19,6 @@ import initializePassport from "./config/passport.config.js";
 
 dotenv.config();
 
-const messageManager = new Message();
 const app = express();
 // const fileStorage = FileStore(session);
 

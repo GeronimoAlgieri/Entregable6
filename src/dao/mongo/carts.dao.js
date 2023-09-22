@@ -29,25 +29,27 @@ export default class CartDao {
   async saveProductCart(id, pid) {
     try {
       let carrito = await CartsModel.findById(id);
-      const prodInCart = carrito.prod.find((product) => product.id == pid);
+      const productoEnCarrito = carrito.products.find(
+        (product) => product.product.id == pid
+      );
       if (carrito) {
-        if (prodInCart) {
+        if (productoEnCarrito) {
           const product = await ProductsModel.findById(pid);
           product.quantity++;
           let result = await product.save();
-          return "success";
+          return "Success";
         } else {
           const product = await ProductsModel.findById(pid);
-          product.quantity++;
-          let result = await ProductsModel.findById(pid);
-          product.quantity.push({
+          product.quantity = 1;
+          let result = await product.save();
+          carrito.products.push({
             product: product.id,
           });
         }
         const result = await carrito.save();
-        return "success";
+        return "Success";
       } else {
-        return "Carrito no encontrado";
+        return "Cart not found";
       }
     } catch (err) {
       console.log(err);
@@ -57,9 +59,9 @@ export default class CartDao {
   async deleteProductCart(cid, pid) {
     try {
       const carrito = await CartsModel.findById(cid);
-      const producto = carrito.prod.findIndex((p) => p.product.id == pid);
+      const producto = carrito.products.findIndex((p) => p.product.id == pid);
       if (producto !== -1) {
-        carrito.prod.splice(producto, 1);
+        carrito.products.splice(producto, 1);
         await carrito.save();
         return "success";
       } else {
@@ -74,7 +76,7 @@ export default class CartDao {
     try {
       const carrito = await CartsModel.findById(id);
       if (carrito) {
-        carrito.prod = data;
+        carrito.products = data;
         carrito.save();
         return "success";
       } else {
@@ -88,7 +90,7 @@ export default class CartDao {
   async updateQuantityProductCart(cid, pid, cantidad) {
     try {
       const carrito = await CartsModel.findById(cid);
-      const prodInCart = carrito.prod.findIndex((e) => e.product.id == pid);
+      const prodInCart = carrito.products.findIndex((e) => e.product.id == pid);
       if (carrito) {
         if (prodInCart !== -1) {
           const product = await ProductsModel.findById(pid);
@@ -110,7 +112,7 @@ export default class CartDao {
     try {
       const carrito = await CartsModel.findById(cid);
       if (carrito) {
-        carrito.prod = [];
+        carrito.products = [];
         await carrito.save();
         return "success";
       } else {

@@ -62,8 +62,8 @@ async function deleteProductsCarrito(req, res) {
 
 async function deleteProductCarrito(req, res) {
   try {
-    const { cid } = req.params;
-    const result = await CART_DAO.deleteProductCarrito(cid, pid);
+    const { cid, pid } = req.params;
+    const result = await CART_DAO.deleteProductCart(cid, pid);
     res.json({ status: result, message: "OK" });
   } catch (err) {
     console.log(err);

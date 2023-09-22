@@ -18,7 +18,7 @@ router.post("/", creatCart);
 router.get("/:cid", getCarritoById);
 
 // Elimina un solo producto del carrito
-router.delete("/:cid/product/:api", deleteProductCarrito);
+router.delete("/:cid/product/:pid", deleteProductCarrito);
 
 // Tomar carrito por ID y sumar un producto
 router.post("/:cid/product/:pid", saveProductInCart);

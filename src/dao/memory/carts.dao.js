@@ -22,24 +22,26 @@ export default class carritoDao {
   }
 
   saveProductCart(id, pid) {
-    const carrito = this.carrito.find((e) => e.id == id);
-    const prod = PRODUCT_DAO.getProductById(pid);
+    const carrito = this.carrito.find((c) => c.id == id);
+    const product = PRODUCT_DAO.getProductById(pid);
     if (carrito) {
-      if (carrito.prod.some((e) => e.id == prod.id)) {
-        const prodInCart = carrito.prod.find((p) => pid == pid);
-        prodInCart.quantity++;
+      if (carrito.products.some((p) => p.id == product.id)) {
+        const productoEnCarrito = carrito.products.find(
+          (p) => p.id == product.id
+        );
+        productoEnCarrito.quantity++;
       } else {
         product.quantity = 1;
-        carrito.prod.push(product);
+        carrito.products.push(product);
       }
-      return "success";
+      return "Success";
     } else {
       return "Carrito no encontrado";
     }
   }
 
   deleteProduct(id, pid) {
-    const carrito = this.carrito.find((e) => e.id == pid);
+    const carrito = this.carrito.find((e) => e.id == id);
     if (carrito) {
       const producto = carrito.prod.findIndex((p) => p.id == pid);
       if (producto === -1) return "Producto no encontrado";

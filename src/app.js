@@ -16,10 +16,38 @@ import forgotRouter from "./Routes/forgot.routers.js";
 import signupRouter from "./Routes/signup.routes.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
+import cors from "cors";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
 const app = express();
+const user = process.env.USER_MAIL;
+const password = process.env.PASSWORD_MAIL;
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  port: 587,
+  auth: {
+    user: user,
+    pass: password,
+  },
+});
+
+app.get("/mail", async (req, res) => {
+  let result = await transporter.sendMail({
+    from: " Moov Sneakers <geronimoalgieri1@gmail.com>",
+    to: "algierigeronimo1@gmail.com",
+    subject: "Correo 3",
+    text: "Muchas gracias por tu compra",
+    html: `<div><h1>Muchas gracias por su compra.</h1>
+    <p>Pronto te llegar el envio de lo que compraste a tu casa</p>
+    </div>
+    `,
+    attachments: [],
+  });
+  res.send("Correo enviado");
+});
 // const fileStorage = FileStore(session);
 
 const PORT = process.env.PORT || "8080";
@@ -55,6 +83,12 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
 app.use(express.static("public"));
+// app.use(
+//   cors({
+//     origin: ["http://localhost:8080"],
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//   })
+// );
 
 const environment = async () => {
   try {

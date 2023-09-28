@@ -1,32 +1,35 @@
-function addToCart(id, product) {
-  let carrito = "64d6c953ddbeb56bf9552e7e";
-  postCart(id, carrito)
-    .then((dato) => {
-      alert("producto agregado al carrito", dato);
-    })
-    .catch((err) => console.log(err, "no se agrego el producto "));
-}
+let buttons = document.querySelectorAll("button");
+// let carrito = "";
+// let carrito = document.getElementById("id-carrito");
 
-async function postCart(id, carrito) {
-  try {
-    const response = await fetch(`/api/carts/${carrito}/producto/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+buttons.forEach((button) => {
+  button.addEventListener("click", agregarAlCarrito);
+});
+
+async function agregarAlCarrito(e) {
+  // console.log("probando carrito", carrito);
+  const pid = e.target.id;
+  fetch(`http://localhost:8080/carts`, {
+    method: "POST",
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+      let carrito = data.result._id;
+      fetch(`http://localhost:8080/carts/${carrito}/product/${pid}`, {
+        method: "POST",
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Producto agregado correctamente",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        })
+        .catch((err) => {
+          console.log("Error", err);
+        });
     });
-    return response;
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-async function increase(idCart, idProduct) {
-  console.log(idCart, idProduct);
-  let carrito = "64d6c953ddbeb56bf9552e7e";
-  postCart(idProduct, carrito)
-    .then((dato) => {
-      alert("producto agregado al carrito", dato);
-    })
-    .catch((err) => console.log(err, "no se agrego el producto "));
 }

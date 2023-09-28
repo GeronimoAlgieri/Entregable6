@@ -1,9 +1,27 @@
 import { PRODUCT_DAO } from "../dao/index.js";
+import ProductsModel from "../dao/mongo/models/products.js";
 
 async function getProductos(req, res) {
   try {
-    const result = await PRODUCT_DAO.getProducts(req, res);
-    res.send(result);
+    const { limit = 10, page = 1, sort, query } = req.query;
+    const { docs, hasPrevPage, hasNextPage, nextPage, prevPage } =
+      await ProductsModel.paginate(query ? { category: query } : {}, {
+        limit,
+        page,
+        lean: true,
+        sort: sort ? { price: 1 } : { price: -1 },
+      });
+    res.render("products", {
+      title: "Productos",
+      products: docs,
+      hasPrevPage,
+      hasNextPage,
+      prevPage,
+      nextPage,
+      limit,
+      sort,
+      query,
+    });
   } catch (err) {
     console.log(err);
   }

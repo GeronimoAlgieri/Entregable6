@@ -63,14 +63,14 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// router.get(
-//   "/current",
-//   passportCall("jwt"),
-//   authorization("user"),
-//   (req, res) => {
-//     res.send(req.user);
-//   }
-// );
+router.get(
+  "/current",
+  passportCall("jwt"),
+  authorization("user"),
+  (req, res) => {
+    res.send(req.user);
+  }
+);
 
 router.get("/failLogin", async (req, res) => {
   console.log("failed strategy");

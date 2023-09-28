@@ -26,7 +26,8 @@ export default class CartDao {
     }
   }
 
-  async saveProductCart(id, pid) {
+  async saveProductCarts(id, pid) {
+    console.log(id);
     try {
       let carrito = await CartsModel.findById(id);
       const productoEnCarrito = carrito.products.find(

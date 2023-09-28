@@ -1,6 +1,9 @@
 <section style="background-color: #eee;">
   <div class="container py-5">
     <div class="row justify-content-center mb-3">
+                    <a href="http://localhost:8080/carts/{{idCart}}" id="id-carrito"><span class="material-symbols-outlined">
+                    shopping_cart
+                    </span></a>
       {{#if products}}
         {{#each products}}
           <div class="col-md-12 col-xl-10 margin">
@@ -60,17 +63,11 @@
                     </div>
                     <h6 class="text-success">Free shipping</h6>
                     <div class="d-flex flex-column mt-4">
-                      <button
+                      {{!-- <button
                         class="btn btn-primary btn-sm"
                         type="button"
-                      >Details</button>
-                      <button
-                        class="btn btn-outline-primary btn-sm mt-2"
-                        type="button"
-                        onclick="addToCart('{{this._id}}')"
-                      >
-                        Add to cart
-                      </button>
+                      >Details</button> --}}
+                      <button class="btn btn-success" id="{{this._id}}">Agregar al Carrito</button>
                     </div>
                   </div>
                 </div>
@@ -87,11 +84,11 @@
       <p>Page {{ pagination.currentPage }} of {{ pagination.totalPages }}</p>
   
       {{#if pagination.hasPrevPage}}
-        <a href="{{ pagination.prevLink }}">Anterior</a>
+        <a href="{{ pagination.nextPage }}">Anterior</a>
       {{/if}}
   
       {{#if pagination.hasNextPage}}
-        <a href="{{ pagination.nextLink }}">Siguiente</a>
+        <a href="{{ pagination.nextPage }}">Siguiente</a>
       {{/if}}
     </div>
 </section>

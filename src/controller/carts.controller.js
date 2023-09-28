@@ -21,7 +21,7 @@ async function getCarritoById(req, res) {
 async function saveProductInCart(req, res) {
   try {
     const { cid, pid } = req.params;
-    const result = await CART_DAO.saveProductCart(cid, pid);
+    const result = await CART_DAO.saveProductCarts(cid, pid);
     res.json({ status: "success", message: "OK", result });
   } catch (err) {
     console.log(err);

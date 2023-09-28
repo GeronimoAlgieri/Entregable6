@@ -3,7 +3,6 @@ import ProductsModel from "./models/products.js";
 export default class ProductDao {
   async getProducts(req, res) {
     try {
-      res.render("products");
       const { limit = 10, page = 1, sort, query } = req.query;
       const results = await ProductsModel.paginate(
         query ? { category: query } : {},

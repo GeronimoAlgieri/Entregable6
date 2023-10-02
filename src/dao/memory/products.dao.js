@@ -1,4 +1,4 @@
-export default class productDao {
+export class ProductDaoMemory {
   constructor() {
     this.products = [];
   }
@@ -8,7 +8,7 @@ export default class productDao {
   }
 
   getProductById(id) {
-    return this.products.find((e) => e.id == id);
+    return this.products.find((e) => e._id === +id);
   }
 
   saveProduct(producto) {
@@ -38,5 +38,11 @@ export default class productDao {
     } else {
       return "Producto no encontrado";
     }
+  }
+
+  modifyProductStock(pid) {
+    const product = this.products.findIndex((e) => e.pid == pid);
+    product.stock -= product.quantity;
+    return product;
   }
 }

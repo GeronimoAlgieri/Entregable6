@@ -1,36 +1,36 @@
-import OrderModel from "./models/ticket.js";
+import TicketModel from "./models/ticket.js";
 
-export default class OrderDao {
-  async getOrder() {
+export class TicketDaoMongo {
+  async getTicket() {
     try {
-      const result = await OrderModel.find();
+      const result = await TicketModel.find();
       return result;
     } catch (err) {
       console.log(err);
     }
   }
 
-  async getOrderById(id) {
+  async getTicketById(tid) {
     try {
-      const result = await OrderModel.findById(id);
+      const result = await TicketModel.findById(tid);
       return result;
     } catch (err) {
       console.log(err);
     }
   }
 
-  async createOrder(order) {
+  async createTicket(ticket) {
     try {
-      const result = await OrderModel.create(order);
+      const result = await TicketModel.create(ticket);
       return result;
     } catch (err) {
       console.log(err);
     }
   }
 
-  async resolveOrder(id, order) {
+  async resolveTicket(tid, ticket) {
     try {
-      const result = await OrderModel.findByIdAndUpdate(id, order);
+      const result = await TicketModel.findByIdAndUpdate(tid, ticket);
       return result;
     } catch (err) {
       console.log(err);

@@ -7,6 +7,7 @@ import {
   saveProductInCart,
   updateQuantityProductCarrito,
   updateCarrito,
+  purchaseProduct,
 } from "../controller/carts.controller.js";
 
 const router = Router();
@@ -31,5 +32,8 @@ router.put("/:cid", updateCarrito);
 
 //Actualizar cantidad de ejemplares del producto seleccionado, del carrito especificado
 router.put("/:cid/product/:pid", updateQuantityProductCarrito);
+
+// Finalizar compra
+router.post("/:cid/purchase", purchaseProduct);
 
 export default router;

@@ -1,4 +1,5 @@
 import { CART_DAO } from "../dao/index.js";
+import { TICKET_DAO } from "../dao/index.js";
 
 async function creatCart(req, res) {
   const carrito = {
@@ -21,7 +22,7 @@ async function getCarritoById(req, res) {
 async function saveProductInCart(req, res) {
   try {
     const { cid, pid } = req.params;
-    const result = await CART_DAO.saveProductCarts(cid, pid);
+    const result = await CART_DAO.saveProductCart(cid, pid);
     res.json({ status: "success", message: "OK", result });
   } catch (err) {
     console.log(err);
@@ -70,6 +71,22 @@ async function deleteProductCarrito(req, res) {
   }
 }
 
+async function purchaseProduct(req, res) {
+  const { total, email, code } = req.body;
+  try {
+    const ticket = {
+      code,
+      purchase_datetime: new Date(),
+      amount: total,
+      purchaser: email,
+    };
+    const result = TICKET_DAO.saveTicket(ticket);
+    res.json({ message: "Success", result });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export {
   creatCart,
   getCarritoById,
@@ -78,4 +95,5 @@ export {
   updateQuantityProductCarrito,
   deleteProductsCarrito,
   deleteProductCarrito,
+  purchaseProduct,
 };

@@ -1,6 +1,6 @@
 import { PRODUCT_DAO } from "../index.js";
 
-export default class carritoDao {
+export class CartDaoMemory {
   constructor() {
     this.carrito = [];
   }
@@ -8,6 +8,19 @@ export default class carritoDao {
   getCart() {
     return this.carrito;
   }
+
+  // async getCartById(cid) {
+  //   const productPromises = this.carrito
+  //     .find((c) => c.id === +cid)
+  //     .products.map(async (p) => {
+  //       const product = await PRODUCT_DAO.getProductById(p.product);
+  //       return { product: product };
+  //     });
+
+  //   const products = await Promise.all(productPromises);
+
+  //   return { id: this.carrito.find((c) => c.id === +cid).id, products };
+  // }
 
   getCartById(id) {
     return this.carrito.find((e) => e.id == id);

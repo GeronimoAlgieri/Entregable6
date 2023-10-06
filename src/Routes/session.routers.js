@@ -68,7 +68,11 @@ router.get(
   passportCall("jwt"),
   authorization("user"),
   (req, res) => {
-    res.send(req.user);
+    res.send({
+      fullname: req.user.user.fullname,
+      age: req.user.user.age,
+      role: req.user.user.role,
+    });
   }
 );
 

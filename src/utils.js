@@ -15,6 +15,18 @@ export const isValidPassword = (savedPassword, password) => {
   return bcrypt.compareSync(savedPassword, password);
 };
 
+export const authAdmin = (req, res, next) => {
+  if (req.user.user.role !== "user")
+    return res.send({ status: "error", message: "no eres admin" });
+  next();
+};
+
+export function authUser(req, res, next) {
+  if (req.session?.username) {
+    next();
+  }
+}
+
 // export const isValidPassword = (username, password) =>
 //   bcrypt.compare(password, username.password);
 

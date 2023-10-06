@@ -17,12 +17,20 @@ import signupRouter from "./Routes/signup.routes.js";
 import viewRouter from "./Routes/view.routers.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
-import cors from "cors";
+// import cors from "cors";
 import nodemailer from "nodemailer";
+import compression from "express-compression";
 
 dotenv.config();
 
 const app = express();
+
+app.use(
+  compression({
+    brotli: { enabled: true, zlib: {} },
+  })
+);
+
 const user = process.env.USER_MAIL;
 const password = process.env.PASSWORD_MAIL;
 

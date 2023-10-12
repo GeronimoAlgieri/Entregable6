@@ -8,7 +8,7 @@ import {
   modifyProductStock,
   createProducts,
 } from "../controller/products.controller.js";
-import { authAdmin, authUser } from "../utils.js";
+import { authAdmin, authUser } from "../utils/authToken.js";
 
 const router = Router();
 

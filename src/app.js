@@ -15,6 +15,7 @@ import loginRouter from "./Routes/login.routers.js";
 import forgotRouter from "./Routes/forgot.routers.js";
 import signupRouter from "./Routes/signup.routes.js";
 import viewRouter from "./Routes/view.routers.js";
+import loggerRouter from "./Routes/logger.routers.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 // import cors from "cors";
@@ -118,6 +119,7 @@ app.use("/signup", signupRouter);
 app.use("/forgot", forgotRouter);
 app.use("/api/session/", sessionRouter);
 app.use("/view", viewRouter);
+app.use("/loggerTest", loggerRouter);
 
 const server = app.listen(PORT, () => {
   console.log("Escuchando desde el puerto " + PORT);

@@ -2,8 +2,10 @@ import { CART_DAO } from "../dao/index.js";
 import { TICKET_DAO } from "../dao/index.js";
 import CustomError from "../service/CustomError.js";
 import Errors from "../service/enum.js";
+import { addLogger } from "../utils/logger.js";
 
 async function creatCart(req, res) {
+  req.logger = addLogger;
   const carrito = {
     products: [],
   };
@@ -17,11 +19,15 @@ async function creatCart(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en el carrito", error);
   }
 }
 
 async function getCarritoById(req, res) {
+  req.logger = addLogger;
   try {
     const { cid } = req.params;
     let result = await CART_DAO.getCartById(cid);
@@ -33,11 +39,15 @@ async function getCarritoById(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en el carrito", error);
   }
 }
 
 async function saveProductInCart(req, res) {
+  req.logger = addLogger;
   try {
     const { cid, pid } = req.params;
     const result = await CART_DAO.saveProductCart(cid, pid);
@@ -49,11 +59,15 @@ async function saveProductInCart(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en el carrito", error);
   }
 }
 
 async function updateCarrito(req, res) {
+  req.logger = addLogger;
   try {
     const { cid } = req.params;
     const { data } = req.body;
@@ -66,11 +80,15 @@ async function updateCarrito(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en el carrito", error);
   }
 }
 
 async function updateQuantityProductCarrito(req, res) {
+  req.logger = addLogger;
   try {
     const { cid, pid } = req.params;
     const { cantidad } = req.body;
@@ -83,11 +101,15 @@ async function updateQuantityProductCarrito(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en el carrito", error);
   }
 }
 
 async function deleteProductsCarrito(req, res) {
+  req.logger = addLogger;
   try {
     const { cid } = req.params;
     const result = await CART_DAO.deleteProductsCart(cid);
@@ -99,11 +121,15 @@ async function deleteProductsCarrito(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en el carrito", error);
   }
 }
 
 async function deleteProductCarrito(req, res) {
+  req.logger = addLogger;
   try {
     const { cid, pid } = req.params;
     const result = await CART_DAO.deleteProductCart(cid, pid);
@@ -115,11 +141,15 @@ async function deleteProductCarrito(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en el carrito", error);
   }
 }
 
 async function purchaseProduct(req, res) {
+  req.logger = addLogger;
   const { total, email, code } = req.body;
   try {
     const ticket = {
@@ -137,6 +167,9 @@ async function purchaseProduct(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en el carrito", error);
   }
 }

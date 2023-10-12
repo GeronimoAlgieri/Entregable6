@@ -1,4 +1,4 @@
-// import { configuracion } from "../config.js";
+// import configuracion from "../config.js";
 // configuracion();
 
 // Mongo

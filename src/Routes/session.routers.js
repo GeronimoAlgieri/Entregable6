@@ -2,7 +2,6 @@ import { Router } from "express";
 import UserModel from "../dao/mongo/models/user.js";
 import {
   createHash,
-  generateToken,
   isValidPassword,
   passportCall,
   authorization,

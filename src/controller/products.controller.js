@@ -3,8 +3,10 @@ import ProductsModel from "../dao/mongo/models/products.js";
 import CustomError from "../service/CustomError.js";
 import Errors from "../service/enum.js";
 import { generateUserErrorInfo } from "../service/info.js";
+import { addLogger } from "../utils/logger.js";
 
 async function getProductos(req, res) {
+  req.logger = addLogger;
   try {
     const { limit = 10, page = 1, sort, query } = req.query;
     const { docs, hasPrevPage, hasNextPage, nextPage, prevPage } =
@@ -32,6 +34,9 @@ async function getProductos(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en los productos", error);
   }
   // try {
@@ -46,6 +51,7 @@ async function getProductos(req, res) {
 }
 
 async function getProductsById(req, res) {
+  req.logger = addLogger;
   try {
     const { pid } = req.params;
     const result = await PRODUCT_DAO.getProductById(pid);
@@ -57,11 +63,15 @@ async function getProductsById(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en los productos", error);
   }
 }
 
 async function saveProducto(req, res) {
+  req.logger = addLogger;
   try {
     const {
       title,
@@ -113,11 +123,15 @@ async function saveProducto(req, res) {
       }),
       code: Errors.INCOMPLETE_DATA,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en los productos", error);
   }
 }
 
 async function modifyProducto(req, res) {
+  req.logger = addLogger;
   try {
     const { pid } = req.params;
     const {
@@ -169,11 +183,15 @@ async function modifyProducto(req, res) {
       }),
       code: Errors.INCOMPLETE_DATA,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en los productos", error);
   }
 }
 
 async function deleteProducto(req, res) {
+  req.logger = addLogger;
   try {
     const { pid } = req.params;
     const result = await PRODUCT_DAO.deleteProduct(pid);
@@ -185,11 +203,15 @@ async function deleteProducto(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en los productos", error);
   }
 }
 
 async function modifyProductStock(req, res) {
+  req.logger = addLogger;
   const { pid } = req.params;
   try {
     const result = await PRODUCT_DAO.modifyProductStock(pid);
@@ -201,11 +223,15 @@ async function modifyProductStock(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log("Error en los productos", error);
   }
 }
 
 async function createProducts(req, res) {
+  req.logger = addLogger;
   try {
     for (let i = 0; i < 100; i++) {
       const newProductRandom = {
@@ -229,6 +255,9 @@ async function createProducts(req, res) {
       cause: err,
       code: Errors.DATABASE_ERROR,
     });
+    req.logger.error(
+      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    );
     console.log(error);
   }
 }

@@ -11,4 +11,4 @@ function configuracion() {
   });
 }
 
-export { configuracion };
+export default configuracion;

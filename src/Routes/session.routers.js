@@ -7,6 +7,7 @@ import {
   authorization,
 } from "../utils.js";
 import passport from "passport";
+import { generateToken } from "../utils/authToken.js";
 
 const router = Router();
 

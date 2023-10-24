@@ -27,7 +27,10 @@ async function getProductos(req, res) {
       sort,
       query,
     });
+    // const products = await PRODUCT_DAO.getProducts();
+    // res.render("products", { products });
   } catch (err) {
+    console.log(err);
     const error = CustomError.generateError({
       name: "Error en los productos",
       message: "Error al obtener los productos",

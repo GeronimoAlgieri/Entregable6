@@ -20,11 +20,19 @@ export class ProductDaoMongo {
         : null;
       results.prevLink = prevLink;
       results.nextLink = nextLink;
+      console.log(results);
       return results;
       // return await ProductsModel.find();
     } catch (err) {
       console.log(err);
     }
+    // try {
+    //   const products = await ProductsModel.find().lean();
+    //   res.send({ status: "success" });
+    //   return products;
+    // } catch (err) {
+    //   console.log(err);
+    // }
   }
 
   async getProductById(id) {

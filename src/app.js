@@ -7,6 +7,7 @@ import * as dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+
 import productRouter from "./Routes/products.routers.js";
 import carritoRouter from "./Routes/carts.routers.js";
 import chatRouter from "./Routes/chat.routers.js";
@@ -16,11 +17,13 @@ import forgotRouter from "./Routes/forgot.routers.js";
 import signupRouter from "./Routes/signup.routes.js";
 import viewRouter from "./Routes/view.routers.js";
 import loggerRouter from "./Routes/logger.routers.js";
+
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 // import cors from "cors";
 import nodemailer from "nodemailer";
 import compression from "express-compression";
+import config from "./config/config.js";
 
 dotenv.config();
 
@@ -62,7 +65,10 @@ app.get("/mail", async (req, res) => {
 
 const PORT = process.env.PORT || "8080";
 const MONGO_URI = process.env.MONGO_URI;
-const connection = mongoose.connect(MONGO_URI);
+const connection = mongoose.connect(config.mongo.URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 app.use(cookieParser("C0d3rS3cr3t"));
 

@@ -1,5 +1,5 @@
 import Router from "express";
-import { getLogger } from "../Controller/logger.controller.js";
+import { getLogger } from "../controller/logger.controller.js";
 
 const router = Router();
 

@@ -5,6 +5,7 @@ import { createHash, isValidPassword } from "../utils.js";
 import GithubStrategy from "passport-github2";
 import * as dotenv from "dotenv";
 import jwt, { ExtractJwt } from "passport-jwt";
+import config from "./config.js";
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ const JwtStrategy = jwt.Strategy;
 const coockieExtractor = (req) => {
   let token = null;
   if (req && req.cookies) {
-    token = req.cookies["C0d3rS3cr3t"];
+    token = req.cookies[config.jwt.COOKIE];
   }
   return token;
 };
@@ -79,6 +80,23 @@ const initializePassport = () => {
           }
         } catch (err) {
           return done("Error", err);
+        }
+      }
+    )
+  );
+
+  passport.use(
+    "current",
+    new JwtStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromExtractors([coockieExtractor]),
+        secretOrKey: config.jwt.SECRET,
+      },
+      async (jwt_payload, done) => {
+        try {
+          return done(null, jwt_payload);
+        } catch (err) {
+          return done(err);
         }
       }
     )

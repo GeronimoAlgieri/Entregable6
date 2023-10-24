@@ -1,34 +1,19 @@
-import User from "../dao/mongo/user.dao.js";
+import { USER_DAO } from "../dao.js";
+import { userRepository } from "../dao/repository/users.repository.js";
 
-const userService = new User();
+const userService = new userRepository(USER_DAO);
 
-async function getUsers(req, res) {
-  try {
-    const result = await userService.getUser();
-    res.json({ status: "success", result });
-  } catch (err) {
-    console.log(err);
+const getUser = async (req, res) => {
+  let user = await userService.getUserById();
+  if (!user) {
+    res.status(404).send({ status: "error", message: "No user found" });
+  } else {
+    res.send({ status: "success", payload: user });
   }
-}
+};
 
-async function getUsersById(req, res) {
-  try {
-    const { uid } = req.params;
-    const result = await userService.getUserById(uid);
-    res.json({ status: "success", result });
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-async function saveUsers(req, res) {
-  try {
-    const user = req.body;
-    const result = await userService.saveUser(user);
-    res.json({ status: "success", result });
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-export { getUsers, getUsersById, saveUsers };
+// const createUser = async (req, res) => {
+//   let { first_name, last_name, dni, email, birthDate, gender } = req.body;
+//   if(!first_name || !last_name || !dni || !email || !birthDate || !gender)
+//   return res.status(400).send({status: "error", message: })
+// };

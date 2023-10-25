@@ -121,7 +121,7 @@ app.use("/api/products", productRouter);
 app.use("/carts", carritoRouter);
 app.use("/chat", chatRouter);
 app.use("/", loginRouter);
-app.use("/signup", signupRouter);
+app.use("/register", signupRouter);
 app.use("/forgot", forgotRouter);
 app.use("/api/session/", sessionRouter);
 app.use("/view", viewRouter);

@@ -3,26 +3,29 @@ import { TICKET_DAO } from "../dao/index.js";
 import CustomError from "../service/CustomError.js";
 import Errors from "../service/enum.js";
 import { addLogger } from "../utils/logger.js";
+import CartsModel from "../dao/mongo/models/carts.js";
 
 async function creatCart(req, res) {
-  req.logger = addLogger;
+  // req.logger = addLogger;
   const carrito = {
     products: [],
   };
   try {
-    let result = await CART_DAO.saveCart(carrito);
-    res.json({ message: "Carrito creado", result });
+    let result = await CartsModel.create(carrito);
+    console.log("console.log de carrito", result);
+    // res.json({ message: "Carrito creado", result });
   } catch (err) {
-    const error = CustomError.generateError({
-      name: "Error en el carrito",
-      message: "Error al crear el carrito",
-      cause: err,
-      code: Errors.DATABASE_ERROR,
-    });
-    req.logger.error(
-      "Error " + JSON.stringify(error) + " " + new Date().toDateString()
-    );
-    console.log("Error en el carrito", error);
+    // const error = CustomError.generateError({
+    //   name: "Error en el carrito",
+    //   message: "Error al crear el carrito",
+    //   cause: err,
+    //   code: Errors.DATABASE_ERROR,
+    // });
+    console.log(err);
+    // req.logger.error(
+    //   "Error " + JSON.stringify(error) + " " + new Date().toDateString()
+    // );
+    // console.log("Error en el carrito", error);
   }
 }
 

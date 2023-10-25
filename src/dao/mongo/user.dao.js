@@ -10,7 +10,7 @@ export class UserDaoMongo {
     }
   }
 
-  async getUserById(id) {
+  async getUserByEmail(id) {
     try {
       const result = await UserModel.findById(id);
       return result;
@@ -35,5 +35,9 @@ export class UserDaoMongo {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async modifyUser(id, user) {
+    return await UserModel.findByIdAndUpdate(id, user);
   }
 }

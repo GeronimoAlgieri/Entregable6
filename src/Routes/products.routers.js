@@ -13,7 +13,7 @@ import { authAdmin, authUser } from "../utils/authToken.js";
 const router = Router();
 
 //Tomar productos
-router.get("/", authUser, getProductos);
+router.get("/", getProductos);
 
 //Modificar un producto
 router.get("/:pid", modifyProducto);

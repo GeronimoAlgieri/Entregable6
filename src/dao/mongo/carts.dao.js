@@ -18,9 +18,9 @@ export class CartDaoMongo {
     }
   }
 
-  async saveCart(cart) {
+  async saveCart() {
     try {
-      return await CartsModel.create(cart);
+      return await CartsModel.create();
     } catch (err) {
       console.log(err);
     }

@@ -13,25 +13,29 @@ signupForm.addEventListener("submit", function (event) {
     console.log(datos)
   );
 });
-console.log("Probando js");
-async function postSignup(first_name, last_name, age, email, password) {
-  const data = {
-    first_name,
-    last_name,
-    age,
-    email,
-    password,
-  };
 
-  console.log("all  the data", data);
-  const response = await fetch("/api/session/signup", {
+const postSignup = async (first_name, last_name, age, email, password) => {
+  const response = await fetch("/api/session/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({ first_name, last_name, age, email, password }),
   });
-
-  const result = await response.json();
-  return result;
-}
+  const data = await response.json();
+  console.log("all  the data", postSignup);
+  console.log(data);
+  if (data.status === "success") {
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Registrado con exito!",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    setTimeout(() => {
+      window.location.href = loc[0] + ":" + loc[1] + ":" + loc[2].split("/")[0];
+    }, 2000);
+  }
+  return data;
+};

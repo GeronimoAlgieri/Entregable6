@@ -8,7 +8,13 @@ import {
 } from "../utils.js";
 import passport from "passport";
 import { generateToken } from "../utils/authToken.js";
+import sessionController from "../controller/session.controller.js";
+import MailingService from "../service/mailing.js";
+import { userRepository } from "../dao/repository/users.repository.js";
+import { USER_DAO } from "../dao/index.js";
+import { creatCart } from "../controller/carts.controller.js";
 
+const userService = new userRepository(USER_DAO);
 const router = Router();
 
 function auth(req, res, next) {
@@ -19,30 +25,18 @@ function auth(req, res, next) {
   return res.status(401).json("error de autenticacion");
 }
 
-// router.post(
-//   "/login",
-//   passport.authenticate("login", {
-//     failureRedirect: "/api/session/failLogin",
-//   }),
-//   async (req, res) => {
-//     const { username, password } = req.body;
-//     const user = await UserModel.findOne({ username, password });
-//     if (!user) {
-//       return res.status(401).json("Usuario no encontrado");
-//     } else {
-//       if (!isValidPassword(username, username.password)) {
-//         return res.status(401).json({ mesage: "contraseña invalida" });
-//       } else {
-//         const myToken = generateToken(user);
-//         res.cookie("C0d3rS3cr3t", myToken, {
-//           maxAge: 60 * 60 * 1000,
-//           httpOnly: true,
-//         });
-//         return res.status(200).json({ message: "success" });
-//       }
-//     }
-//   }
-// );
+router.post(
+  "/register",
+  passport.authenticate("register", {
+    passReqToCallback: true,
+    session: false,
+    failureRedirect: "api/session/failedRegister",
+    failureMessage: true,
+  }),
+  sessionController.register
+);
+
+router.get("/failedRegister", sessionController.failedRegister);
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -65,6 +59,12 @@ router.post("/login", async (req, res) => {
 
 router.get(
   "/current",
+  passport.authenticate("current", { session: false }),
+  sessionController.getCurrentUser
+);
+
+router.get(
+  "/current",
   passportCall("jwt"),
   authorization("user"),
   (req, res) => {
@@ -76,12 +76,12 @@ router.get(
   }
 );
 
-router.get("/failLogin", async (req, res) => {
-  console.log("failed strategy");
-  res.send({ error: "failed" });
-});
+// router.get("/failLogin", async (req, res) => {
+//   console.log("failed strategy");
+//   res.send({ error: "failed" });
+// });
 
-// router.post("/signup", async (req, res) => {
+// router.post("/register", async (req, res) => {
 //   const { first_name, last_name, age, email, password } = req.body;
 
 //   const result = await UserModel.create({
@@ -105,21 +105,6 @@ router.get("/failLogin", async (req, res) => {
 //   }
 // });
 
-router.post(
-  "/signup",
-  passport.authenticate("register", {
-    failureRedirect: "/failRegister",
-  }),
-  async (req, res) => {
-    res.send({ status: "success", message: "user register" });
-  }
-);
-
-router.get("/failRegister", async (req, res) => {
-  console.log("failed strategy");
-  res.send({ error: "failed" });
-});
-
 router.post("/forgot", async (req, res) => {
   const { username, newPassword } = req.body;
 
@@ -136,7 +121,7 @@ router.post("/forgot", async (req, res) => {
     });
     console.log(respuesta);
     res.status(200).json({
-      respuesta: "se cambio la contrasena",
+      respuesta: "se cambio la contraseña",
       datos: respuesta,
     });
   }
@@ -158,11 +143,56 @@ router.get(
   }
 );
 
-router.get("/privado", auth, (req, res) => {
-  res.render("topsecret", {
-    nombre: req.session.user.first_name,
-    apellido: req.session.user.last_name,
+router.get("/recover", (req, res) => {
+  res.render("recoverPassword", {
+    tittle: "Recover password",
+    script: "recoverPassword.js",
+    PORT: process.env.PORT,
   });
+});
+
+router.post("/recoverPassword", async (req, res) => {
+  const { mail } = req.body;
+  try {
+    await MailingService.sendMail({
+      from: "Has olvidado tu contraseña <coderhouse@gmail.com>",
+      to: mail,
+      subject: "Has olvidado tu contraseña",
+      headers: {
+        "Expity-Date": new Date(Date.now() + 3600000).toUTCString(),
+      },
+      html: `
+      <h1>Has olvidado tu contraseña</h1>
+      <a href="http://localhost:${process.env.PORT}/replacePassword"><button>Recuperar contraseña</button></a>`,
+    });
+    temp = await userService.getUserByEmail(mail);
+    res.json({ status: "success", message: "mensaje enviado" });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.get("/replacePassword", (req, res) => {
+  res.render("replacePassword", {
+    title: "Restablecer contraseña",
+    script: "replacePassword.js",
+  });
+});
+
+router.post("/replace", async (req, res) => {
+  try {
+    const { pass } = req.body;
+    const user = await userService.getUserByEmail(temp.email);
+    if (isValidPassword(pass, user.password)) {
+      return res.json({ status: "error", message: "misma contraseña" });
+    } else {
+      user.password = createHash(pass);
+      const data = await userService.modifyUser(user.id, user);
+      res.json({ status: "success", message: "Contraseña restablecida" });
+    }
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 // router.get("/logout", (req, res) => {

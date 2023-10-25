@@ -29,4 +29,10 @@ export class UserDaoMemory {
   async getUserById(id) {
     return this.users.find((user) => user.id === +id);
   }
+
+  async modifyUser(id, user) {
+    let indexUser = this.users.findIndex((user) => user.id === +id);
+    this.users[indexUser] = user;
+    return user;
+  }
 }

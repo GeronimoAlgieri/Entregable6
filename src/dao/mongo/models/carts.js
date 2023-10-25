@@ -13,6 +13,9 @@ const cartsSchema = new mongoose.Schema({
       },
     ],
   },
+  quantity: {
+    type: Number,
+  },
 });
 
 cartsSchema.pre("findOne", function (next) {

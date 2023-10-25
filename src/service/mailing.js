@@ -1,5 +1,5 @@
 import mailer from "nodemailer";
-import config from "../config/config";
+import config from "../config/config.js";
 
 export default class MailingService {
   constructor() {
@@ -14,21 +14,21 @@ export default class MailingService {
   }
 }
 
-sendSimpleMail = async ({
-  from,
-  to,
-  subject,
-  text,
-  html,
-  attachements = [],
-}) => {
-  let result = await this.client.sendMail({
-    from,
-    to,
-    subject,
-    text,
-    html,
-    attachements,
-  });
-  return result;
-};
+// sendSimpleMail = async ({
+//   from,
+//   to,
+//   subject,
+//   text,
+//   html,
+//   attachements = [],
+// }) => {
+//   let result = await this.client.sendMail({
+//     from,
+//     to,
+//     subject,
+//     text,
+//     html,
+//     attachements,
+//   });
+//   return result;
+// };

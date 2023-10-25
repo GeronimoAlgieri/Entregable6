@@ -8,5 +8,6 @@ export class productsDTO {
     this.stock = product.stock;
     this.thumbnail = product.thumbnail;
     this.quantity = product.quantity;
+    this.owner = product.owner;
   }
 }

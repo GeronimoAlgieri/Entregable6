@@ -20,10 +20,11 @@ import loggerRouter from "./Routes/logger.routers.js";
 
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
-// import cors from "cors";
 import nodemailer from "nodemailer";
 import compression from "express-compression";
 import config from "./config/config.js";
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
 
 dotenv.config();
 
@@ -117,8 +118,23 @@ const environment = async () => {
 
 environment();
 
+const SwaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Uso de Swagger",
+      description: "Implementacion de Swagger",
+    },
+  },
+  apis: [`./src/docs/**/*.yaml`],
+};
+
+const specs = swaggerJsDoc(SwaggerOptions);
+
+app.use("/api-docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
+
 app.use("/api/products", productRouter);
-app.use("/carts", carritoRouter);
+app.use("/api/carts", carritoRouter);
 app.use("/chat", chatRouter);
 app.use("/", loginRouter);
 app.use("/register", signupRouter);

@@ -1,9 +1,11 @@
-import { PRODUCT_DAO } from "../dao/index.js";
 import ProductsModel from "../dao/mongo/models/products.js";
+import { ProductRepository } from "../dao/repository/products.repository.js";
 import CustomError from "../service/CustomError.js";
 import Errors from "../service/enum.js";
 import { generateUserErrorInfo } from "../service/info.js";
 import { addLogger } from "../utils/logger.js";
+
+const productService = new ProductRepository();
 
 async function getProductos(req, res) {
   req.logger = addLogger;
@@ -57,7 +59,7 @@ async function getProductsById(req, res) {
   req.logger = addLogger;
   try {
     const { pid } = req.params;
-    const result = await PRODUCT_DAO.getProductById(pid);
+    const result = await productService.getProductById(pid);
     res.json({ message: "Producto seleccionado", result: result });
   } catch (err) {
     const error = CustomError.generateError({
@@ -109,7 +111,7 @@ async function saveProducto(req, res) {
         thumbnail: thumbnail,
         quantity: 1,
       };
-      const result = await PRODUCT_DAO.saveProduct(productoNuevo);
+      const result = await productService.saveProduct(productoNuevo);
       res.status(201).json({ message: "Producto guardado", result });
     }
   } catch (err) {
@@ -169,7 +171,7 @@ async function modifyProducto(req, res) {
         // category: category,
         thumbnail: thumbnail,
       };
-      const data = await PRODUCT_DAO.modifyProduct(producto, pid);
+      const data = await productService.modifyProduct(producto, pid);
       res.json({ message: "Producto modificado", data });
     }
   } catch (err) {
@@ -197,7 +199,7 @@ async function deleteProducto(req, res) {
   req.logger = addLogger;
   try {
     const { pid } = req.params;
-    const result = await PRODUCT_DAO.deleteProduct(pid);
+    const result = await productService.deleteProduct(pid);
     res.json({ message: "Producto eliminado", result });
   } catch (err) {
     const error = CustomError.generateError({
@@ -217,7 +219,7 @@ async function modifyProductStock(req, res) {
   req.logger = addLogger;
   const { pid } = req.params;
   try {
-    const result = await PRODUCT_DAO.modifyProductStock(pid);
+    const result = await productService.modifyProductStock(pid);
     res.json({ message: "Producto actualizado", result });
   } catch (err) {
     const error = CustomError.generateError({
@@ -247,7 +249,7 @@ async function createProducts(req, res) {
         thumbnail: faker.image.url(),
         quantity: 1,
       };
-      const response = await PRODUCT_DAO.saveProduct(newProductRandom);
+      const response = await productService.saveProduct(newProductRandom);
       console.log(response);
     }
     res.json({ status: "Success", message: "All products inserted" });

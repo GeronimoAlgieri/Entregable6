@@ -1,0 +1,127 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obten todos los products
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Los productos fueron obtenidos con exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Product"
+        "500":
+          description: Hubo un error al obtener el producto solicitado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Product"
+  /api/products/{pid}:
+    get:
+      summary: Obten un producto por su id
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto que solicita
+          schema:
+            $type: String
+          responses:
+            "200":
+              description: producto encontrado exitosamente
+              content:
+                application/json:
+                  schema:
+                    $ref: "#components/schemas/Product"
+    put:
+      summary: Actualiza un producto a partir de su id
+      tags:
+        - products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id del producto que se desea solicitar.
+          schema:
+            $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/updateProduct"
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: String
+          description: Id del producto
+        title:
+          type: String
+          description: Nombre del producto
+        description:
+          type: String
+          description: Caracteristicas del producto
+        price:
+          type: Number
+          description: Precio del producto
+        thumbnail:
+          type: Img
+          description: Imagen del producto
+        code:
+          type: String
+          description: Codigo del producto
+        quantity:
+          type: Number
+          description: Cantidad del producto
+      example:
+        id: ObjectId("64e521c7270afa6e14123f27")
+        title: "Nike Air Force 1 '07 LV8"
+        description: "La luminosidad sigue viva con este calzado"
+        price: 110
+        thumbnail: "sin imgen"
+        code: "11"
+        stock: "3"
+        quantity: 1
+  requestBodies:
+    updateProduct:
+      type: object
+      properties:
+        id:
+          type: ObjectId
+          description: Id del producto
+        title:
+          type: String
+          description: Nombre del producto
+        description:
+          type: String
+          description: Caracteristicas del producto
+        price:
+          type: Number
+          description: Precio del producto
+        thumbnail:
+          type: Img
+          description: Imagen del producto
+        code:
+          type: String
+          description: Codigo del producto
+        quantity:
+          type: Number
+          description: Cantidad del producto
+      example:
+        id: ObjectId("64e521c7270afa6e14123f2a")
+        title: "Jordan Max Aura 4"
+        description: "Toma vuelo en la cancha con un estilo atemporal"
+        price: 147
+        thumbnail: "sin imagen"
+        code: "14"

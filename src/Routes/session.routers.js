@@ -10,12 +10,11 @@ import passport from "passport";
 import { generateToken } from "../utils/authToken.js";
 import sessionController from "../controller/session.controller.js";
 import MailingService from "../service/mailing.js";
-import { userRepository } from "../dao/repository/users.repository.js";
-import { USER_DAO } from "../dao/index.js";
-import { creatCart } from "../controller/carts.controller.js";
+import { UserRepository } from "../dao/repository/users.repository.js";
 
-const userService = new userRepository(USER_DAO);
+const userService = new UserRepository();
 const router = Router();
+const temp = "";
 
 function auth(req, res, next) {
   //console.log(req.session);
@@ -76,35 +75,6 @@ router.get(
   }
 );
 
-// router.get("/failLogin", async (req, res) => {
-//   console.log("failed strategy");
-//   res.send({ error: "failed" });
-// });
-
-// router.post("/register", async (req, res) => {
-//   const { first_name, last_name, age, email, password } = req.body;
-
-//   const result = await UserModel.create({
-//     first_name,
-//     last_name,
-//     age,
-//     email,
-//     password: createHash(password),
-//   });
-
-//   if (result === null) {
-//     return res.status(401).json({
-//       respuesta: "error",
-//     });
-//   } else {
-//     req.session.user = email;
-//     req.session.admin = true;
-//     res.status(200).json({
-//       respuesta: "ok",
-//     });
-//   }
-// });
-
 router.post("/forgot", async (req, res) => {
   const { username, newPassword } = req.body;
 
@@ -154,19 +124,35 @@ router.get("/recover", (req, res) => {
 router.post("/recoverPassword", async (req, res) => {
   const { mail } = req.body;
   try {
-    await MailingService.sendMail({
-      from: "Has olvidado tu contraseña <coderhouse@gmail.com>",
+    // const mailer = new MailingService();
+    // const result = await mailer.sendSimpleMail({
+    //   from: "Has olvidado tu contraseña <coderhouse@gmail.com>",
+    //   to: mail,
+    //   subject: "Has olvidado tu contraseña",
+    //   html: {
+    //     "Expity-Date": new Date(Date.now() + 3600000).toUTCString(),
+    //   },
+    //   html: `
+    //   <h1>Has olvidado tu contraseña</h1>
+    //   <a href="http://localhost:${process.env.PORT}/replacePassword"><button>Recuperar contraseña</button></a>`,
+    // });
+    // temp = await userService.getUserByEmail(mail);
+    // console.log(result);
+    // res.json({ status: "success", message: "mensaje enviado" });
+    await transport.sendMail({
+      from: "Forgot password <coder123@gmail.com>",
       to: mail,
-      subject: "Has olvidado tu contraseña",
+      subject: "Forgot password",
       headers: {
-        "Expity-Date": new Date(Date.now() + 3600000).toUTCString(),
+        "Expiry-Date": new Date(Date.now() + 3600 * 1000).toUTCString(),
       },
       html: `
-      <h1>Has olvidado tu contraseña</h1>
-      <a href="http://localhost:${process.env.PORT}/replacePassword"><button>Recuperar contraseña</button></a>`,
+          <h1>Forgot password</h1>
+       <a href="http://localhost:${process.env.PORT}/replacePassword"><button>Recuperar contraseña</button></a>
+      `,
     });
     temp = await userService.getUserByEmail(mail);
-    res.json({ status: "success", message: "mensaje enviado" });
+    res.json({ status: "success", message: "Mail sended" });
   } catch (err) {
     console.log(err);
   }
@@ -183,12 +169,13 @@ router.post("/replace", async (req, res) => {
   try {
     const { pass } = req.body;
     const user = await userService.getUserByEmail(temp.email);
+    console.log(user);
     if (isValidPassword(pass, user.password)) {
       return res.json({ status: "error", message: "misma contraseña" });
     } else {
       user.password = createHash(pass);
       const data = await userService.modifyUser(user.id, user);
-      res.json({ status: "success", message: "Contraseña restablecida" });
+      res.json({ status: "success", message: "Contraseña restablecida", data });
     }
   } catch (err) {
     console.log(err);

@@ -2,13 +2,13 @@ import CartsModel from "./models/carts.js";
 import ProductsModel from "./models/products.js";
 
 export class CartDaoMongo {
-  async getCart() {
-    try {
-      return await CartsModel.find({});
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  // async getCart() {
+  //   try {
+  //     return await CartsModel.find({});
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 
   async getCartById(id) {
     try {

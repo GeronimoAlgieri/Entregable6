@@ -31,7 +31,6 @@ formComprar.addEventListener("submit", async (e) => {
       const dataM = await response.json();
       console.log(dataM);
     });
-    const code = generateRandomPurchaseCode(10);
     const totalAmount = totalProducts.reduce(
       (acc, product) => acc + product.price * product.quantity,
       0

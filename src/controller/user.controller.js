@@ -1,7 +1,6 @@
-import { USER_DAO } from "../dao.js";
-import { userRepository } from "../dao/repository/users.repository.js";
+import { UserRepository } from "../dao/repository/users.repository.js";
 
-const userService = new userRepository(USER_DAO);
+const userService = new UserRepository();
 
 const getUser = async (req, res) => {
   let user = await userService.getUserById();

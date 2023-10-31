@@ -1,0 +1,119 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Añade los productos al carrito
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Los productos fueron añadidos con exito
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Cart"
+        "500":
+          description: Hubo un error al llenar el carrito con los productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Cart"
+  /api/carts/{cid}:
+    get:
+      summary: Busca un producto por su id
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del producto que solicita
+          schema:
+            $type: String
+          responses:
+            "200":
+              description: Producto encontrado exitosamente
+              content:
+                application/json:
+                  schema:
+                    $ref: "#components/schemas/Cart"
+    put:
+      summary: Añade un nuevo producto al carrito
+      tags:
+        - Carts
+      parameters:
+        - name: product
+          in: path
+          required: true
+          description: Producto que va a agregar
+          schema:
+            $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/updateCarrito"
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: String
+          description: Id del producto
+        title:
+          type: String
+          description: Nombre del producto
+        description:
+          type: String
+          description: Caracteristicas del producto
+        price:
+          type: Number
+          description: Precio del producto
+        thumbnail:
+          type: Img
+          description: Imagen del producto
+        code:
+          type: String
+          description: Codigo del producto
+      example:
+        id: ObjectId("64e521c7270afa6e14123f28")
+        title: "Air Jordan 5 Retro SE"
+        description: "El amado diseño de Tinker Hatfield"
+        price: 240
+        thumbnail: "sin imagen"
+        code: "12"
+  requestBodies:
+    updateProduct:
+      type: object
+      properties:
+        id:
+          type: ObjectId
+          description: Id del producto
+        title:
+          type: String
+          description: Nombre del producto
+        description:
+          type: String
+          description: Caracteristicas del producto
+        price:
+          type: Number
+          description: Precio del producto
+        thumbnail:
+          type: Img
+          description: Imagen del producto
+        code:
+          type: String
+          description: Codigo del producto
+      example:
+        id: ProductId("64e521c7270afa6e14123f29")
+        title: "Nike Air Force 1 Mid '07 LX"
+        description: "La alegre versión del ícono del básquetbol"
+        price: 160
+        thumbnail: "sin imagen"
+        code: "13"
